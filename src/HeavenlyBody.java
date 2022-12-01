@@ -5,11 +5,16 @@ public final class HeavenlyBody {
     private final String name;
     private final double orbitalPeriod;
     private final Set<HeavenlyBody> sattelites;
+    private final BodyTypes bodyType;
 
-    public HeavenlyBody(String name, double orbitalPeriod) {
+
+
+    public HeavenlyBody(String name, double orbitalPeriod, BodyTypes bodyType) {
         this.name = name;
         this.orbitalPeriod = orbitalPeriod;
         this.sattelites = new HashSet<>();
+        this.bodyType = bodyType;
+
     }
 
     public String getName() {
@@ -48,3 +53,8 @@ public final class HeavenlyBody {
         return this.name.hashCode() + 57;
     }
 }
+
+
+//the Heavenly body class is declared final, so cannot be subclassed.
+// the Java String class is also final, which is why it can safely use the instanceof method without having to worry
+// about comparisons with a subclass. (lecture 97)
