@@ -1,12 +1,11 @@
 import java.util.HashSet;
 import java.util.Set;
 
-public final class HeavenlyBody {
+public abstract class HeavenlyBody {
     private final String name;
     private final double orbitalPeriod;
     private final Set<HeavenlyBody> sattelites;
     private final BodyTypes bodyType;
-
 
 
     public HeavenlyBody(String name, double orbitalPeriod, BodyTypes bodyType) {
@@ -25,35 +24,76 @@ public final class HeavenlyBody {
         return orbitalPeriod;
     }
 
-    public void addMoon(HeavenlyBody moon) {
+    public BodyTypes getBodyType() {
+        return bodyType;
+    }
+
+    public boolean addSatellite(HeavenlyBody moon) {
         this.sattelites.add(moon);
+        return true;
     }
 
     public Set<HeavenlyBody> getSattelites() {
         return new HashSet<>(this.sattelites);
     }
-    // beide override methods heb je nodig om de zelfde objects uit de Hashset te halen
+
+    // Both override methods are needed to get the same object from the HashSet
     @Override
-    public boolean equals(Object obj){
-        if (this == obj){
+    public final boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-       System.out.println("obj.getClass() = " + obj.getClass());
-       System.out.println("this.getClass() + " + this.getClass());
-
-       if ((obj == null) ||(obj.getClass() != this.getClass())){
-           return false;
-       }
-       String objName = ((HeavenlyBody) obj).getName();
-       return this.name.equals((objName));
+        if (obj instanceof HeavenlyBody) { // which confirms that it is the right type of class
+            HeavenlyBody theObject = (HeavenlyBody) obj;
+            if (this.name.equals(theObject.getName())) {
+                return this.bodyType == theObject.getBodyType();
+            }
+        }
+        return false;
     }
+
     @Override
-    public int hashCode() {
-        System.out.println("hashcode called" );
-        return this.name.hashCode() + 57;
+    public final int hashCode() {
+        return this.name.hashCode() + 57 + this.bodyType.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return this.name + " : " + this.bodyType + " : " + this.orbitalPeriod;
+    }
+
+    public static final class Key{
+        private String name;
+        private BodyTypes bodyType;
+
+        public Key(String name, BodyTypes bodyType) {
+            this.name = name;
+            this.bodyType = bodyType;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public BodyTypes getBodyType() {
+            return bodyType;
+        }
+
+        @Override
+        public int hashCode() {
+            return this.name.hashCode() + 57 + this.bodyType.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+           Key key = (Key) obj;
+           if (this.name.equals(key.getName())){
+               return (this.bodyType == key.getBodyType());
+           }
+           return false;
+        }
     }
 }
-
 
 //the Heavenly body class is declared final, so cannot be subclassed.
 // the Java String class is also final, which is why it can safely use the instanceof method without having to worry
